@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.VisualBasic;
 
 internal class Program
-{
+{ //testowa zmiana
     private static void Main(string[] args)
     {
         List<(int, int)> points = new(); //string do podejścia #1
