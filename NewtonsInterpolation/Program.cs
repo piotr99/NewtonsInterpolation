@@ -8,31 +8,92 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        List<(string, double)> points = new();
+        List<(int, int)> points = new(); //string do podejścia #1
 
-        points.Add(("1", 2));
-        points.Add(("2", -3));
-        points.Add(("3", 4));
-        points.Add(("-1", 2));
+        points.Add((1, 2));
+        points.Add((2, -3));
+        points.Add((3, 4));
+        points.Add((-1, 2));
 
         List<double> xValues = new();
         List<double> yValues = new();
         foreach (var point in points)
         {
-            xValues.Add(int.Parse(point.Item1));
+            // do podejścia #1 xValues.Add(int.Parse(point.Item1));
+            xValues.Add(point.Item1);
             yValues.Add(point.Item2);
         }
 
-        List<double> functionValues = new();
-        functionValues.Add(points[0].Item2);
+        // do podejścia #1 List<double> functionValues = new();
+        // do podejścia #1 functionValues.Add(points[0].Item2);
 
         List<double> coefficients = new();
 
-        //NewtonInterpolation(points, functionValues, xValues);
-        NewtonInterpolation(xValues, yValues, coefficients);
+        //do podejścia #1 NewtonInterpolation(points, functionValues, xValues);
+        var result = NewtonInterpolation(xValues, yValues, coefficients);
+
+        //Wypisz wszystkie współczynniki
+        for (int i = 0; i < result.Count; i++)
+        {
+            Console.WriteLine($"a{i} = {result[i]}");
+        }
+        //Zbuduj wielomian
+        StringBuilder polynomial = new();
+        foreach(var coeff in result.Select((value, index) => new { value, index }))
+        {
+            if (coeff.index == 0)
+            {
+                polynomial.Append($"{coeff.value}");
+            }
+            else
+            {
+                polynomial.Append($" + {coeff.value}");
+                for (int j = 0; j < coeff.index; j++)
+                {
+                    polynomial.Append($"(x - {xValues[j]})");
+                }
+            }
+        }
+        Console.WriteLine($"Wielomian interpolacyjny Newtona: P(x) = {polynomial}");   
 
     }
 
+    public static List<double> NewtonInterpolation(List<double>xValues, List<double> yValues, List<double> coefficient, int iteration = 1)//iteration w sumie nie jest wymagane, można użyć coefficient.Count
+    {
+        //Wyniki
+        coefficient.Add(yValues[0]);
+        //Obecne yValues, zmniejsza się o 1 element przy kazdej rekurencji
+        List<double> current = new();
+        for(int i = 0; i < yValues.Count -1; i++)
+        {
+            double product = (yValues[i + 1] - yValues[i]) / (xValues[i + iteration] - xValues[i]);
+            current.Add(product);
+        }
+        if (yValues.Count == 1)
+        {
+            
+            return coefficient;
+        }
+        else
+        {
+            iteration++;
+            return NewtonInterpolation(xValues, current, coefficient, iteration);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* =================Podejście #1====================== */
     public static void NewtonInterpolation(List<(string, double)> points, List<double> functionValues, List<double> xValues)
     {
 
@@ -83,30 +144,6 @@ internal class Program
         else
         {
             NewtonInterpolation(differentialQuotients, functionValues, xValues);
-        }
-    }
-    public static void NewtonInterpolation(List<double>xValues, List<double> yValues, List<double> coefficient, int iteration = 1)
-    {
-        coefficient.Add(yValues[0]);
-        //TO DO
-        List<double> current = new();
-        for(int i = 0; i < yValues.Count -1; i++)
-        {
-            double product = (yValues[i + 1] - yValues[i]) / (xValues[i + iteration] - xValues[i]);
-            current.Add(product);
-        }
-        if (yValues.Count == 1)
-        {
-            for (int i = 0; i < coefficient.Count; i++)
-            {
-                Console.WriteLine($"a{i} = {coefficient[i]}");
-            }
-            return;
-        }
-        else
-        {
-            iteration++;
-            NewtonInterpolation(xValues, current, coefficient, iteration);
         }
     }
 }
