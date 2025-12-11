@@ -79,7 +79,7 @@ using System.Text;
 using Microsoft.VisualBasic;
 
 internal class Program
-{ //testosdfssdfsdfsd 13132131231212312312
+{
     private static void Main(string[] args)
     {
         List<(int, int)> points = new(); //string do podejścia #1
