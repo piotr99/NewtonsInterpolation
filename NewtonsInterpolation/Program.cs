@@ -1,4 +1,78 @@
-﻿using System;
+﻿/*
+SPRAWOZDANIE – Interpolacja wielomianowa metodą Newtona
+
+1. Cel programu
+   Program realizuje interpolację wielomianową metodą Newtona dla zadanych punktów (x_i, y_i).
+   Wynikiem działania programu są:
+   - współczynniki wielomianu interpolacyjnego Newtona,
+   - tekstowa postać wielomianu P(x) wypisana w konsoli.
+
+2. Podstawa teoretyczna
+   Dla punktów (x_0, y_0), (x_1, y_1), ..., (x_n, y_n) szukamy wielomianu P(x) stopnia n takiego, że:
+      P(x_i) = y_i  dla każdego i.
+   Wielomian Newtona ma postać:
+      P(x) = a0 
+           + a1 (x - x0)
+           + a2 (x - x0)(x - x1)
+           + ...
+           + an (x - x0)(x - x1)…(x - x_{n-1})
+
+   Współczynniki a_k wyznaczane są za pomocą różnic dzielonych:
+      a0 = f[x0] = y0
+      a1 = f[x0, x1]
+      a2 = f[x0, x1, x2]
+      ...
+   Różnice dzielone wyższego rzędu oblicza się rekurencyjnie z wykorzystaniem wzoru:
+      f[x_i, x_{i+1}] = (f(x_{i+1}) - f(x_i)) / (x_{i+1} - x_i)
+
+3. Opis działania programu
+   - W funkcji Main tworzona jest lista punktów typu (int, int):
+        (1, 2), (2, -3), (3, 4), (-1, 2).
+   - Następnie punkty są rozdzielane na dwie listy:
+        xValues – lista argumentów x,
+        yValues – lista wartości y.
+   - Tworzona jest lista coefficients, która będzie przechowywać kolejne współczynniki a_k.
+   - Wywołanie:
+        var result = NewtonInterpolation(xValues, yValues, coefficients);
+     zwraca listę współczynników wielomianu Newtona.
+
+   Funkcja NewtonInterpolation:
+   - Parametry:
+       xValues     – stała lista argumentów x,
+       yValues     – aktualne wartości (kolejne rzędy różnic dzielonych),
+       coefficient – lista dotychczas obliczonych współczynników a_k,
+       iteration   – numer aktualnego rzędu różnic dzielonych (domyślnie 1).
+   - Dodaje do coefficient pierwszy element yValues[0] jako kolejny współczynnik a_k.
+   - Oblicza nową listę current, zawierającą różnice dzielone wyższego rzędu:
+       current[i] = (yValues[i + 1] - yValues[i]) / (xValues[i + iteration] - xValues[i]).
+   - Jeżeli yValues.Count == 1, to znaczy, że obliczono wszystkie współczynniki i funkcja zwraca coefficient.
+   - W przeciwnym wypadku iteration jest zwiększane i funkcja wywołuje się rekurencyjnie
+     z aktualnymi wartościami current.
+
+   Po otrzymaniu listy result:
+   - Program wypisuje na ekranie współczynniki:
+        a0, a1, a2, ...
+   - Następnie buduje tekstową postać wielomianu P(x) z użyciem StringBuilder:
+       P(x) = a0 + a1(x - x0) + a2(x - x0)(x - x1) + ...
+
+4. Przykładowe dane
+   W programie użyto punktów:
+      (1, 2), (2, -3), (3, 4), (-1, 2).
+   Na ich podstawie wyznaczane są współczynniki a0, a1, a2, a3
+   oraz budowany jest odpowiadający im wielomian interpolacyjny Newtona.
+
+5. Wnioski
+   - Program poprawnie implementuje interpolację Newtona z wykorzystaniem różnic dzielonych.
+   - Zastosowanie rekursji w funkcji NewtonInterpolation upraszcza zapis algorytmu,
+     ale wymaga ostrożności przy doborze argumentów (xValues, yValues, iteration).
+   - Oddzielenie przygotowania danych (Main) od funkcji obliczeniowej (NewtonInterpolation)
+     ułatwia dalszą rozbudowę programu, np. o wczytywanie punktów z pliku lub z klawiatury.
+   - Tekstowa postać wielomianu P(x) umożliwia jego łatwą interpretację oraz późniejsze
+     podstawianie konkretnych wartości x do obliczeń numerycznych.
+*/
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
